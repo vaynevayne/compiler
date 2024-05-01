@@ -1,8 +1,8 @@
 let parse = require("./parse");
 let evaluate = require("./evaluate");
 
-let sourceCode = "2+3*4"; // 10
+let sourceCode = "5-1+4/2/2*3"; // 10
 let ast = parse(sourceCode);
 console.log("ast", JSON.stringify(ast, null, 2));
 let result = evaluate(ast);
-console.log(result); // 14
+console.log(result);
