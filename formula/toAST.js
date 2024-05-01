@@ -3,8 +3,9 @@ let ASTNode = require("./ASTNode");
 let tokenTypes = require("./tokenTypes");
 
 /**
-add -> multiple | multiple + add
-multiple -> NUMBER | NUMBER * multiple
+ * 2+3*4
+additive -> multiple | multiple + additive 包含+-
+multiple -> NUMBER | NUMBER * multiple 包含 * /
  */
 function toAST(tokenReader) {
   let rootNode = new ASTNode(nodeTypes.Program);
@@ -20,14 +21,16 @@ function additive(tokenReader) {
   let node = child1;
   let token = tokenReader.peek(); // 看下一个符号 +
   if (child1 !== null && token !== null) {
-    if (token.type === tokenTypes.PLUS) {
+    if (token.type === tokenTypes.PLUS || token.type === tokenTypes.MINUS) {
       // 如果后面是加号
       token = tokenReader.read(); // 把加号读出来并消耗掉
       // add -> multiple | multiple + add
       // 加号后是add, 就要递归自身
       let child2 = additive(tokenReader);
       if (child2 !== null) {
-        node = new ASTNode(nodeTypes.Additive);
+        node = new ASTNode(
+          token.type === tokenTypes.PLUS ? nodeTypes.Additive : nodeTypes.Minus
+        );
         node.appendChild(child1);
         node.appendChild(child2);
       }
@@ -44,12 +47,20 @@ function multiple(tokenReader) {
   let node = child1;
   let token = tokenReader.peek(); // + *
   if (child1 !== null && token !== null) {
-    if (token.type === token.multiple) {
+    if (
+      token.type === tokenTypes.MULTIPLY ||
+      token.type === tokenTypes.DIVIDE
+    ) {
       // 2+3*
       token = tokenReader.read(); // 读取下一个token *
       let child2 = multiple(tokenReader); // 4
+      console.log("child2", child2);
       if (child2 !== null) {
-        node = new ASTNode(nodeTypes.Multiplicative);
+        node = new ASTNode(
+          token.type === tokenTypes.MULTIPLY
+            ? nodeTypes.Multiplicative
+            : nodeTypes.Divide
+        );
         node.appendChild(child1);
         node.appendChild(child2);
       }

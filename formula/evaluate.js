@@ -10,8 +10,14 @@ function evaluate(node) {
     case nodeTypes.Additive: // 加法节点
       result = evaluate(node.children[0]) + evaluate(node.children[1]);
       break;
+    case nodeTypes.Minus: // 减法节点
+      result = evaluate(node.children[0]) - evaluate(node.children[1]);
+      break;
     case nodeTypes.Multiplicative: // 乘法节点
       result = evaluate(node.children[0]) * evaluate(node.children[1]);
+      break;
+    case nodeTypes.Divide: // 除法节点
+      result = evaluate(node.children[0]) / evaluate(node.children[1]);
       break;
     case nodeTypes.Numeric:
       result = parseFloat(node.value);
