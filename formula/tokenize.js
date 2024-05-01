@@ -1,5 +1,5 @@
 // + * - /
-let RegExpObject = /([0-9]+)|(\+)|(\*)|(-)|(\/)/g;
+let RegExpObject = /([0-9]+)|(\+)|(\*)|(-)|(\/)|(\()|(\))/g;
 let tokenTypes = require("./tokenTypes");
 let tokenNames = [
   tokenTypes.NUMBER,
@@ -7,6 +7,8 @@ let tokenNames = [
   tokenTypes.MULTIPLY,
   tokenTypes.MINUS,
   tokenTypes.DIVIDE,
+  tokenTypes.LEFT_PARA,
+  tokenTypes.RIGHT_PARA,
 ];
 
 /**

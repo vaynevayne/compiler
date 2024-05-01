@@ -7,7 +7,8 @@ let tokenTypes = require("./tokenTypes");
 additive -> minus | minus + additive  
 minus -> multiple | multiple - minus 
 multiple -> divide | divide * multiple
-divide -> NUMBER | NUMBER / divide
+divide -> primary | primary / divide
+primary -> NUMBER | (additive) 基础规则
  */
 function toAST(tokenReader) {
   let rootNode = new ASTNode(nodeTypes.Program);
@@ -18,9 +19,12 @@ function toAST(tokenReader) {
   return rootNode;
 }
 
+// additive -> minus | minus + additive
 function additive(tokenReader) {
   let child1 = minus(tokenReader);
+  // 用node 存child 是因为 第二段 minus + additive   是两个规则产生的
   let node = child1;
+
   let token = tokenReader.peek(); // 看下一个符号 +
   if (child1 !== null && token !== null) {
     if (token.type === tokenTypes.PLUS) {
@@ -82,8 +86,9 @@ function multiple(tokenReader) {
   return node;
 }
 
+// divide -> primary | primary / divide
 function divide(tokenReader) {
-  const child1 = number(tokenReader); // 先匹配迟来NUMBER, 但是乘法规则并没有匹配结束
+  const child1 = primary(tokenReader); // 先匹配迟来NUMBER, 但是乘法规则并没有匹配结束
 
   // node 可能匹配到一个子节点规则,那么就是node, 如果有多个子节点, 那么node就是父节点
   let node = child1;
@@ -98,6 +103,21 @@ function divide(tokenReader) {
         node.appendChild(child1);
         node.appendChild(child2);
       }
+    }
+  }
+  return node;
+}
+
+// primary -> NUMBER | (additive) 基础规则
+function primary(tokenReader) {
+  let node = number(tokenReader);
+  // 不用 node 存 child 是因为两个规则只会产生一个值
+  if (!node) {
+    let token = tokenReader.peek();
+    if (token !== null && token.type === tokenTypes.LEFT_PARA) {
+      tokenReader.read();
+      node = additive(tokenReader);
+      tokenReader.read();
     }
   }
   return node;
