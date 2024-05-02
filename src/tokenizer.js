@@ -23,7 +23,6 @@ function eof() {
 }
 function foundLeftParentheses(char) {
   // h1
-  console.log("foundLeftParentheses", char);
   if (LETTERS.test(char)) {
     // 如果char是一个小写字母或数字
     currentToken.type = tokenTypes.JSXIdentifier;
@@ -31,7 +30,6 @@ function foundLeftParentheses(char) {
     return jsxIdentifier; // 继续收集标识符
   } else if (char === "/") {
     emit({ type: tokenTypes.BackSlash, value: "/" });
-    console.log("tokens", tokens);
     return foundLeftParentheses; // 这里借助左边的来找
   }
 }
@@ -156,9 +154,9 @@ function tokenizer(input) {
   return tokens;
 }
 
-module.export = {
+module.exports = {
   tokenizer,
 };
 
-let sourceCode = `<h1 id="title" name={name}><span>hello</span>world</h1>`;
-console.log(tokenizer(sourceCode));
+// let sourceCode = `<h1 id="title"><span>hello</span>world</h1>`;
+// console.log(tokenizer(sourceCode));
