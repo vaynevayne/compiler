@@ -127,10 +127,6 @@ module.exports = {
   parser,
 };
 
-let sourceCode = `<h1 id="title"><span>hello</span>world</h1>`;
-
-console.log(JSON.stringify(parser(sourceCode), null, 2));
-
 /**
  
  [
